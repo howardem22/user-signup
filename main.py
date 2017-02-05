@@ -19,26 +19,21 @@ import cgi
 import jinja2
 import os
 
+#set up jinja
 template_path=os.path.join(os.path.dirname(__file__),"templates")
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
 
 
+#creates the form  on the main page
 class Index(webapp2.RequestHandler):
     def get(self):
-
-
-
-        error = self.request.get("error")
-
         t = jinja_env.get_template("form.html")
-        content = t.render(
-            username= self.request.get("username"),
-            email= self.request.get("email"),
-            error= error
-        )
+        error = cgi.escape(self.request.get("error"), quote=True)
+        content = t.render(username= self.request.get("username"), email= self.request.get("email"), error= error)
         self.response.write(content)
 
     def post(self):
+
 
 
 app = webapp2.WSGIApplication([
