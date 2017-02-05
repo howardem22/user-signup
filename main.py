@@ -16,61 +16,29 @@
 #
 import webapp2
 import cgi
+import jinja2
+import os
 
-page_header = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Signup</title>
-    <style type="text/css">
-        .error {
-            color: red;
-        }
-    </style>
-</head>
-<body>
-"""
+template_path=os.path.join(os.path.dirname(__file__),"templates")
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
 
-page_footer = """
-</body>
-</html>
-"""
+
 class Index(webapp2.RequestHandler):
     def get(self):
-        sign_header = "<h2>Signup</h2>"
 
-        user_form = """
-        <form method="post">
-        <table>
-            <tr>
-                <td>Username</td>
-                <td><input typr="text" name="username" value="{{username}}"></td>
-                <td>{{error_username}}</td>
-            </tr>
 
-            <tr>
-                <td>Password</td>
-                <td><input typr="password" name="password" value=""></td>
-                <td>{{error_password}}</td>
-            </tr>
 
-            <tr>
-                <td>Verify Password</td>
-                <td><input typr="text" name="password" value=""></td>
-                <td>{{error_verify}}</td>
-            </tr>
+        error = self.request.get("error")
 
-            <tr>
-                <td>Email (Optional)</td>
-                <td><input typr="text" name="email" value="{{email}}"></td>
-                <td>{{error_email}}</td>
-            </tr>
-        </table>
-        <input type="submit">
-        </form>
-        """
-        content = page_header + sign_header + user_form + page_footer
+        t = jinja_env.get_template("form.html")
+        content = t.render(
+            username= self.request.get("username"),
+            email= self.request.get("email"),
+            error= error
+        )
         self.response.write(content)
+
+    def post(self):
 
 
 app = webapp2.WSGIApplication([
