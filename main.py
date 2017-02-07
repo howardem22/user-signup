@@ -26,6 +26,9 @@ header = """
         .error {
             color: red;
         }
+        input {
+            margin-left: 1em;
+        }
     </style>
 </head>
 <body>
@@ -45,9 +48,6 @@ def form_maker(name,email):
     form = "<form method='post'><h2>Signup</h2>"+ user + passw + validp + mail + submit +"</form>"
     return form
 
-def valid_username(username):
-    pass
-
 
 class Index(webapp2.RequestHandler):
 #creates the blank form  on the main page
@@ -59,6 +59,11 @@ class Index(webapp2.RequestHandler):
     def post(self):
         pass
 
+class Welcome(webapp2.RequestHandler):
+#assuming all inputs are vallid, show the welcome screen
+    def get(self):
+        username = self.response.get("username")
+        self.response.write("Welcome, "+ username)
 
 app = webapp2.WSGIApplication([
     ('/', Index)
