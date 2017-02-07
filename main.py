@@ -16,22 +16,65 @@
 #
 import webapp2
 import cgi
-import jinja2
-import os
 
-#set up jinja
-template_path=os.path.join(os.path.dirname(__file__),"templates")
-jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
+header = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Signup</title>
+    <style type="text/css">
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+"""
+
+footer = """
+</body>
+</html>
+"""
+
+form = """
+<form method="post">
+    <h2>Signup</h2>
+    <p>
+        <label>Username</label>
+        <input type="text" name="username" value="{}" />
+    </p>
+
+    <p>
+        <label>Password</label>
+        <input type="password" name="password" value="" />
+    </p>
+
+    <p>
+        <label>Verify Password</label>
+        <input type="password" name="verify" value="" />
+    </p>
+
+    <p>
+        <label>Email (Optional)</label>
+        <input type="text" name="email" value="{}" />
+    </p>
+
+<input type="submit">
+
+</form>
+"""
+
+def valid_username(username):
+    
 
 
-#creates the form  on the main page
 class Index(webapp2.RequestHandler):
+#creates the blank form  on the main page
     def get(self):
-        t = jinja_env.get_template("form.html")
-        error = cgi.escape(self.request.get("error"), quote=True)
-        content = t.render(username= self.request.get("username"), email= self.request.get("email"), error= error)
+        content = header + form + footer
         self.response.write(content)
 
+#checks the input data
     def post(self):
 
 
