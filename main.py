@@ -36,47 +36,28 @@ footer = """
 </html>
 """
 
-form = """
-<form method="post">
-    <h2>Signup</h2>
-    <p>
-        <label>Username</label>
-        <input type="text" name="username" value="{}" />
-    </p>
-
-    <p>
-        <label>Password</label>
-        <input type="password" name="password" value="" />
-    </p>
-
-    <p>
-        <label>Verify Password</label>
-        <input type="password" name="verify" value="" />
-    </p>
-
-    <p>
-        <label>Email (Optional)</label>
-        <input type="text" name="email" value="{}" />
-    </p>
-
-<input type="submit">
-
-</form>
-"""
+def form_maker(name,email):
+    user="<p><label>Username</label><input type='text' name='username' value="+ name +"></p>"
+    passw="<p><label>Password</label><input type='password' name='password' value=''></p>"
+    validp="<p><label>Verify Password</label><input type='password' name='verify' value=''></p>"
+    mail="<p><label>Email (Optional)</label><input type='text' name='email' value="+ email +"></p>"
+    submit="<input type='submit'>"
+    form = "<form method='post'><h2>Signup</h2>"+ user + passw + validp + mail + submit +"</form>"
+    return form
 
 def valid_username(username):
-    
+    pass
 
 
 class Index(webapp2.RequestHandler):
 #creates the blank form  on the main page
     def get(self):
-        content = header + form + footer
+        content = header + form_maker("","") + footer
         self.response.write(content)
 
 #checks the input data
     def post(self):
-
+        pass
 
 
 app = webapp2.WSGIApplication([
