@@ -28,6 +28,7 @@ header = """
             color: red;
         }
         input {
+            margin-right: 1em;
             margin-left: 1em;
         }
     </style>
@@ -44,20 +45,20 @@ USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
   return username and USER_RE.match(username)
 
-PASS_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+PASS_RE = re.compile(r"^.{3,20}$")
 def valid_password(password):
   return password and PASS_RE.match(password)
 
-EMAIL_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
 def valid_email(email):
   return not email or EMAIL_RE.match(email)
 
 
-def form_maker(name,email):
-    user="<p><label>Username</label><input type='text' name='username' value="+ name +"></p>"
-    passw="<p><label>Password</label><input type='password' name='password' value=''></p>"
-    validp="<p><label>Verify Password</label><input type='password' name='verify' value=''></p>"
-    mail="<p><label>Email (Optional)</label><input type='text' name='email' value="+ email +"></p>"
+def form_maker(name,email,ue,pe,ve,ee):
+    user="<p><label>Username</label><input type='text' name='username' value="+ name +"><span class='error'>"+ue+"</span></p>"
+    passw="<p><label>Password</label><input type='password' name='password' value=''><span class='error'>"+pe+"</span></p>"
+    validp="<p><label>Verify Password</label><input type='password' name='verify' value=''><span class='error'>"+ve+"</span></p>"
+    mail="<p><label>Email (Optional)</label><input type='text' name='email' value="+ email +"><span class='error'>"+ee+"</span></p>"
     form = "<form method='post'><h2>Signup</h2>"+ user + passw + validp + mail +"<input type='submit'></form>"
     return form
 
@@ -65,7 +66,7 @@ def form_maker(name,email):
 class Index(webapp2.RequestHandler):
 #creates the blank form  on the main page
     def get(self):
-        content = header + form_maker("","") + footer
+        content = header + form_maker("","","","","","") + footer
         self.response.write(content)
 
 #checks the input data
@@ -96,11 +97,15 @@ class Index(webapp2.RequestHandler):
 
         if u_error == "" and p_error == "" and v_error == "" and e_error == "":
             self.redirect("/welcome?username=" + username)
+        else:
+            content = header + form_maker(username,email,u_error,p_error,v_error,e_error) + footer
+            self.response.write(content)
 
 class Welcome(webapp2.RequestHandler):
 #assuming all inputs are vallid, show the welcome screen
     def get(self):
-        self.response.write("Welcome, ")
+        username = self.request.get("username")
+        self.response.write("<h1>Welcome</h1>")
 
 
 app = webapp2.WSGIApplication([
