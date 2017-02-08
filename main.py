@@ -70,14 +70,40 @@ class Index(webapp2.RequestHandler):
 
 #checks the input data
     def post(self):
-        pass
+        username = self.request.get("username")
+        password = self.request.get("password")
+        verify = self.request.get("verify")
+        email = self.request.get("email")
+
+        u_error = ""
+        p_error = ""
+        v_error = ""
+        e_error = ""
+
+
+        if not valid_username(username):
+            u_error = "That's not a valid username"
+
+
+        if not valid_password(password):
+            p_error = "That's not a valid password"
+
+        if verify != password:
+            v_error = "Password does not match"
+
+        if not valid_email(email):
+            e_error = "That's not a valid email"
+
+        if u_error == "" and p_error == "" and v_error == "" and e_error == "":
+            self.redirect("/welcome?username=" + username)
 
 class Welcome(webapp2.RequestHandler):
 #assuming all inputs are vallid, show the welcome screen
     def get(self):
-        username = self.response.get("username")
-        self.response.write("Welcome, "+ username)
+        self.response.write("Welcome, ")
+
 
 app = webapp2.WSGIApplication([
-    ('/', Index)
+    ('/', Index),
+    ('/welcome', Welcome)
 ], debug=True)
