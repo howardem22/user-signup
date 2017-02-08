@@ -105,7 +105,11 @@ class Welcome(webapp2.RequestHandler):
 #assuming all inputs are vallid, show the welcome screen
     def get(self):
         username = self.request.get("username")
-        self.response.write("<h1>Welcome</h1>")
+        if valid_username(username):
+            content = header + "<h1>Welcome, " + username + "!</h1>" + footer
+            self.response.write(content)
+        else:
+            self.redirect('/')
 
 
 app = webapp2.WSGIApplication([
