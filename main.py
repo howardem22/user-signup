@@ -16,6 +16,7 @@
 #
 import webapp2
 import cgi
+import re
 
 header = """
 <!DOCTYPE html>
@@ -39,13 +40,25 @@ footer = """
 </html>
 """
 
+USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+def valid_username(username):
+  return username and USER_RE.match(username)
+
+PASS_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+def valid_password(password):
+  return password and PASS_RE.match(password)
+
+EMAIL_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+def valid_email(email):
+  return not email or EMAIL_RE.match(email)
+
+
 def form_maker(name,email):
     user="<p><label>Username</label><input type='text' name='username' value="+ name +"></p>"
     passw="<p><label>Password</label><input type='password' name='password' value=''></p>"
     validp="<p><label>Verify Password</label><input type='password' name='verify' value=''></p>"
     mail="<p><label>Email (Optional)</label><input type='text' name='email' value="+ email +"></p>"
-    submit="<input type='submit'>"
-    form = "<form method='post'><h2>Signup</h2>"+ user + passw + validp + mail + submit +"</form>"
+    form = "<form method='post'><h2>Signup</h2>"+ user + passw + validp + mail +"<input type='submit'></form>"
     return form
 
 
